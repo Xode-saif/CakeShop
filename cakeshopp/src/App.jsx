@@ -7,46 +7,22 @@ import CatagoryMenu from './component/CatagoryMenu'
 import axios from 'axios'
 const BASE_URL ='http://localhost:8000';
 
-const data = [
-  {
-    title:"Chocolate Cake",
-    price:"200",
-    imageUrl:"/image1.jpg",
-    rating:"4.3"
-  },
-  {
-    title:"StrowBerry Cake",
-    price:"250",
-    imageUrl:"/image2.jpg",
-    rating:"4.3"
-  },
-  {
-    title:"Fruit Cake",
-    price:"300",
-    imageUrl:"/image3.jpg",
-    rating:"4.6"
-  },
-  {
-    title:"Vanella Cake",
-    price:"200",
-    imageUrl:"/image4.jpg",
-    rating:"4.5"
-  }
-]
 function App() {
   const [datalist,setDatalist] = useState([]);
   const fetchdata = async ()=>{
     try {
       const res = await axios.get(`${BASE_URL}/user/getalldata`);
       if(!res.data.success) throw new Error(res.message);
-      console.log(res.data.data);
+      // console.log(res.data.data);
       setDatalist(res.data.data);
     } catch (error) {
       console.log(error);
     }
   }
+
   useEffect(()=>{
     fetchdata();
+    window.scrollTo(0, 0);
   },[]);
 
   return (
@@ -60,7 +36,7 @@ function App() {
             id={item._id}
             title={item.name}
             price={item.price}
-            imageUrl={item.imageUrl}
+            imageUrl={item.image}
             rating={item.rating}
             />
           ))}

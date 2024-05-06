@@ -10,13 +10,14 @@ import Contact from './component/Contact.jsx'
 import Header from './component/Header.jsx'
 import Card from './component/Card.jsx'
 import Product from './component/Product.jsx'
-import Cart from './component/Cart.jsx'
-import Cartitem from './component/Cartitem.jsx'
+import Cart from './component/Cart/Cart.jsx'
+import Cartitem from './component/Cart/Cartitem.jsx'
 import { Provider } from 'react-redux'
 import { store } from './Store/store.js'
 import UploadForm from './admin/UploadForm.jsx'
 import Admin from './admin/Admin.jsx'
 import Dashboard from './admin/Dashboard.jsx'
+import Payment from './component/Cart/Payment.jsx'
 
 
 const router = createBrowserRouter(
@@ -27,6 +28,7 @@ const router = createBrowserRouter(
         {/* <Route path='cart' element={<Cart/>}/> */}
       </Route>
       <Route path='/product/cart' element={<Cart/>}/>
+      <Route path='/payment' element={<Payment/>}/>
       <Route path='about' element={<About/>}/>
       <Route path='contact' element={<Contact/>}/>
       <Route path='admin' element={<Admin/>}>
@@ -36,6 +38,7 @@ const router = createBrowserRouter(
     </Route>
   )
  )
+
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

@@ -6,25 +6,33 @@ function Form() {
   const [price,setPrice] = useState('');
   const [rating,setRating] = useState('');
   const [desc ,setDesc] = useState('');
-  const handleSubmit = (e) => {
+  //upload image
+  const [file, setFile] = useState();
+  // console.log(file,12);
+  const handleSubmit = async(e) => {
     e.preventDefault();
-
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('name', name);
+    formData.append('price', price);
+    formData.append('rating', rating);
+    formData.append('desc', desc);
+    
     try {
-      const response = axios.post(`${BASE_URL}/user/setData`,{
-        name:name,
-        price:price,
-        rating:rating,
-        desc:desc
-      })
+      const response = await axios.post(`${BASE_URL}/user/setData`,
+      formData
+      ).then(res=>console.log(res))
+      .catch(err=>console.log(err));
       if(response.data.success){
         console.alert("Data uploaded successfully");
+        setName("");setDesc("");setPrice("");setRating("");setFile(null);
       }else{
         console.alert("There is a problem uploading data");
       }
     } catch (error) {
       console.log(error);
     }
-    setFormData({name:"",price:"",rating:"",desc:""});
+    // setFormData({name:"",price:"",rating:"",desc:""});
   }
   return (
     <div className='grid grid-cols-12'>
@@ -52,6 +60,10 @@ function Form() {
             <label className='mr-3 text-bold pt-2 col-span-2 sm:col-span-2'>Product Disc.</label>
             <input className="border-2 px-3 py-4 col-span-4 sm:col-span-10 sm:w-[600px] sm:h-[42px] w-[350] h-[42px] border-gray-300 rounded-md " type="text" placeholder=' Product Description'
             onChange={(e)=>setDesc(e.target.value)}/>
+          </div>
+          <div className='p-5 ml-[100px] flex'>
+            <input type="file" name="file" onChange={ e => setFile(e.target.files[0])}/>
+            {/* <button className='' onClick={handleSubmit}>Upload</button> */}
           </div>
           <div className='flex justify-center m-5'>
             <button type='submit' className=' px-3 py-2 items-end bg-gray-200 font-bold rounded-lg hover:bg-orange-500 hover:text-white h-10 w-20'>Upload</button>

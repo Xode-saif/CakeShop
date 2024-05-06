@@ -1,44 +1,48 @@
 import React, { useState, useEffect,useId} from 'react'
 import { useNavigate,useParams } from 'react-router-dom';
 import Card from './Card'
-import {useDispatch} from 'react-redux';
+import {useDispatch,useSelector} from 'react-redux';
 import { addToCart } from '../Store/cartSlice';
+import axios from 'axios';
+const BASE_URL = 'http://localhost:8000';
+
 const images = [
   '/image1.jpg',
   '/image4.jpg',
   '/image1.jpg',
   '/image4.jpg',
 ];
-const data = [
-  {
-    title:"Chocolate Cake",
-    price:200,
-    imageUrl:"/image1.jpg",
-    rating:"4.3"
-  },
-  {
-    title:"StrowBerry Cake",
-    price:250,
-    imageUrl:"/image2.jpg",
-    rating:"4.3"
-  },
-  {
-    title:"Fruit Cake",
-    price:300,
-    imageUrl:"/image3.jpg",
-    rating:"4.6"
-  },
-  {
-    title:"Vanella Cake",
-    price:200,
-    imageUrl:"/image4.jpg",
-    rating:"4.5"
-  }
-]
+// const data = [
+//   {
+//     title:"Chocolate Cake",
+//     price:200,
+//     imageUrl:"/image1.jpg",
+//     rating:"4.3"
+//   },
+//   {
+//     title:"StrowBerry Cake",
+//     price:250,
+//     imageUrl:"/image2.jpg",
+//     rating:"4.3"
+//   },
+//   {
+//     title:"Fruit Cake",
+//     price:300,
+//     imageUrl:"/image3.jpg",
+//     rating:"4.6"
+//   },
+//   {
+//     title:"Vanella Cake",
+//     price:200,
+//     imageUrl:"/image4.jpg",
+//     rating:"4.5"
+//   }
+// ]
 
 function Product() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [message, setMessage] = useState("");
+  const [size,setSize] = useState("0.5");
 
   // Function to go to the next slide
   const nextSlide = () => {
@@ -59,18 +63,44 @@ function Product() {
     return () => {
       clearInterval(autoSlideTimer);
     };
+    
   }, [currentSlide]);
 
   //navigate
   const navigate = useNavigate();
   //param
   const {productId} = useParams();
+  //fetch data
+  const [productdata,setProductData] = useState({});
+  const fetchdata = async ()=>{
+    try {
+      const res = await axios.get(`${BASE_URL}/user/getdatabyid?id=${productId}`);
+      // console.log(res);
+      if(!res.data.success) throw new Error(res.message);
+      // console.log(res.data.data);
+      setProductData(res.data.data);
+      // setData(res.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  // fetchdata();
+  useEffect(()=>{
+    fetchdata();
+  },[productId]);
+  // console.log(productdata)
+
+
   //dispatch
   const dispatch = useDispatch();
-  
+  const cartCoutn = useSelector(state=>state.cartItems.length);
   const handleGoToCart = () => {
-    dispatch(addToCart({price:data[0].price,name:data[0].title,quantity:1,id:productId,message:message}));
-    navigate('/product/cart');
+    if(cartCoutn<10){
+      dispatch(addToCart({price:productdata.price,name:productdata.name,quantity:1,size:size,id:productId,message:message}));
+      navigate('/product/cart');
+    }else{
+      window.alert("Cart is full");
+    }
   };
   return (
     <>
@@ -148,19 +178,20 @@ function Product() {
 
         {/* product detail */}
         <div className=' lg:overflow-y-auto lg:h-38'>
-            <p className=' text-left mt-4 font-mono text-lg text-bold'>Our Classic Chocolate Truffle Cake</p>
-            <p className='mt-2 text-left'>4.9 <p className='text-yellow-400 inline font-mono'> &#9733;</p> (50+ Reviews)</p>
-            <div className='mt-7 text-left'><span className=' text-left line-through text-gray-600 mr-2 text-2xl'>₹ 599   </span><span className='text-2xl mr-2 font-bold'>₹ 499</span> 
+            <p className=' text-left mt-4 font-mono text-lg text-bold'>{productdata.name}</p>
+            <p className='mt-2 text-left'> {productdata.rating} <a className='text-yellow-400 inline font-mono'> &#9733;</a> (50+ Reviews)</p>
+            <div className='mt-7 text-left'><span className=' text-left line-through text-gray-600 mr-2 text-2xl'>₹ {productdata.price}   </span><span className='text-2xl mr-2 font-bold'>₹ 499</span> 
             <span className=' text-green-500 text-2xl'>(10% OFF)</span></div>
             <div className='mt-7 flex text-left'>
-              <form class="max-w-lg ">
-              <span className='font-semibold'>Select Weight</span>
-                <select class="my-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5">
-                  <option >Choose a size</option>
-                  <option >0.5 Kg</option>
-                  <option >1 Kg</option>
-                  <option >1.5 Kg</option>
-                  <option >2 Kg</option>
+              <form className="max-w-lg ">
+                <span className='font-semibold'>Select Weight</span>
+                <select className="my-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5"
+                  onChange={(e) => setSize(e.target.value)} value={size}>
+                  <option value="">Choose a size</option>
+                  <option value="0.5">0.5 Kg</option>
+                  <option value="1">1 Kg</option>
+                  <option value="1.5">1.5 Kg</option>
+                  <option value="2">2 Kg</option>
                 </select>
               </form>
             </div>
@@ -171,7 +202,7 @@ function Product() {
             <div className='mt-7 border border-dashed border-amber-500'></div>
             <div className='mt-5 text-left'>
               <h2 className='font-semibold'>Product Description</h2>
-              <p className='font-sansn text-gray-600'>The classic chocolate truffle cake layered with chocolate ganache frosting & adorned with dark chocolate truffle glaze.</p>
+              <p className='font-sansn text-gray-600'>{productdata.prductDesc}</p>
             </div>
             <div className='mt-7 mb-7 grid sm:grid-cols-2 gap-5'>
               <button className="text-orange bg-white border hover:bg-orange-700 hover:text-white  font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none "
@@ -184,7 +215,7 @@ function Product() {
         </div>
       </div>
       {/* may like more */}
-      <div>
+      {/* <div>
           <div className='ml-4 text-left'>
             <h2 className='font-semibold text-lg '>You may also like</h2>
           </div>
@@ -199,7 +230,7 @@ function Product() {
               />
             ))}
           </div>
-      </div>
+      </div> */}
     </>
   )
 }
