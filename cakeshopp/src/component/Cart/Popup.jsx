@@ -20,6 +20,10 @@ function Popup({onClose}) {
     const navigate = useNavigate();
     function handlesubmit(e){
         e.preventDefault();
+        if (!Number || !Name || !Locality || !address || !city || !Pincode) {
+            alert('Please fill in all required fields.');
+            return;
+        }
         console.log("form submitted");
         navigate('/payment')
     }
@@ -32,17 +36,17 @@ function Popup({onClose}) {
                 <form className='flex flex-col gap-3 overflow-y-auto '>
 
                     <label className='text-xl text-left'>Mobile No.  </label>
-                    <input onChange={(e)=>setNumber(e.target.value)} className='rounded-lg px-8 py-3 text-black'type="digit" placeholder='Enter Your Mobile Number' required maxLength={10} />
+                    <input onChange={(e)=>setNumber(e.target.value)} className='rounded-lg px-8 py-3 text-black'type="text" placeholder='Enter Your Mobile Number' required maxLength={10} />
                     <label className='text-xl text-left'>Name </label>
                     <input onChange={(e)=>setName(e.target.value)} className="rounded-lg px-8 py-3 text-black" type="text" placeholder='Enter Your Name' required />
                     <label className='text-xl text-left'>Locality</label>
-                    <input onChange={(e)=>setLocality(e.target.value)} className='rounded-lg px-8 py-3' type="String" placeholder='Enter Your Landmark' required/>
+                    <input onChange={(e)=>setLocality(e.target.value)} className='rounded-lg px-8 py-3 text-black' type="text" placeholder='Enter Your Landmark' required/>
                     <label className='text-xl text-left'>Address(Area and Street)</label>
                     <input onChange={(e)=>setAddress(e.target.value)} className="rounded-lg px-8 py-3 text-black" type="text" placeholder='Enter Your Address' required/>
                     <label className='text-xl text-left'>City/District/Town</label>
                     <input onChange={(e)=>setCity(e.target.value)} className="rounded-lg px-8 py-3 text-black" type="text" placeholder='Enter Your City' required/>
                     <label className='text-xl text-left'>Pincode</label>
-                    <input onChange={(e)=>setPincode(e.target.value)} value={Pincode} className="rounded-lg px-8 py-3 text-black" type="digit" placeholder='Enter Your Pincode' required maxLength={6}/>
+                    <input onChange={(e)=>setPincode(e.target.value)} value={Pincode} className="rounded-lg px-8 py-3 text-black" type="text" placeholder='Enter Your Pincode' required maxLength={6}/>
                 </form>
                 <button onClick={handlesubmit} className='mt-4 w-full flex items-start justify-center gap-2 px-5 py-3 rounded-md bg-black'>SAVE AND DELIVER HERE</button>
             </div>

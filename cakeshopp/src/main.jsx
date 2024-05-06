@@ -4,20 +4,21 @@ import App from './App.jsx'
 import './index.css'
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
 import Layout from './Layout.jsx'
-import Carousal from './component/Carousal.jsx'
+
 import About from './component/About.jsx'
 import Contact from './component/Contact.jsx'
-import Header from './component/Header.jsx'
-import Card from './component/Card.jsx'
+
+
 import Product from './component/Product.jsx'
 import Cart from './component/Cart/Cart.jsx'
-import Cartitem from './component/Cart/Cartitem.jsx'
+
 import { Provider } from 'react-redux'
 import { store } from './Store/store.js'
 import UploadForm from './admin/UploadForm.jsx'
 import Admin from './admin/Admin.jsx'
 import Dashboard from './admin/Dashboard.jsx'
 import Payment from './component/Cart/Payment.jsx'
+import CashOnDelivery from './payment/CashOnDelivery.jsx'
 
 
 const router = createBrowserRouter(
@@ -28,7 +29,12 @@ const router = createBrowserRouter(
         {/* <Route path='cart' element={<Cart/>}/> */}
       </Route>
       <Route path='/product/cart' element={<Cart/>}/>
-      <Route path='/payment' element={<Payment/>}/>
+      <Route path='/payment' element={<Payment/>}>
+        <Route path="cashondelivery" element={<CashOnDelivery/>}/>
+        {/* <Route path="upi"/>
+        <Route path="card"/>
+        <Route path="netbanking"/> */}
+      </Route>
       <Route path='about' element={<About/>}/>
       <Route path='contact' element={<Contact/>}/>
       <Route path='admin' element={<Admin/>}>
